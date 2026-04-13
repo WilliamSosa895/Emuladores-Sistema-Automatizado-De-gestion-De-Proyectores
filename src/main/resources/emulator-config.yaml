@@ -1,0 +1,9 @@
+brokerUrl: "tcp://localhost:1883"
+aulas:
+  - "aula-1"
+  - "aula-2"
+luxIntervalMs: 2000
+processingDelayMs: 500
+luxTransitionStepMs: 300
+luxTransitionDelta: 3
+luxHistoryMaxSize: 200

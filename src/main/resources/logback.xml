@@ -1,0 +1,22 @@
+<configuration>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{20} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Nivel INFO para el sistema propio — muestra arranque y eventos importantes -->
+    <logger name="com.proyecto.emuladores" level="INFO"/>
+
+    <!-- Silenciar los logs verbosos de Eclipse Paho -->
+    <logger name="org.eclipse.paho" level="WARN"/>
+
+    <!-- Silenciar SnakeYAML -->
+    <logger name="org.yaml.snakeyaml" level="WARN"/>
+
+    <root level="WARN">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>
