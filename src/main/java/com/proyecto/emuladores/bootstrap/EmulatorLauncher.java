@@ -29,6 +29,7 @@ public class EmulatorLauncher {
 
         // 1. Leer la configuración del YAML
         EmulatorConfig config = loadConfig();
+        config.setBrokerUrl(resolveBrokerUrl(config.getBrokerUrl()));
         log.info("Configuración cargada: {}", config);
 
         // 2. Construir un AulaEmulatorManager por cada aula
@@ -66,6 +67,15 @@ public class EmulatorLauncher {
             log.info("Hilo principal interrumpido — iniciando apagado...");
             Thread.currentThread().interrupt();
         }
+    }
+
+    private static String resolveBrokerUrl(String configuredValue) {
+        String envValue = System.getenv("MQTT_BROKER_URL");
+        if (envValue != null && !envValue.isBlank()) {
+            return envValue.trim();
+        }
+
+        return configuredValue;
     }
 
     // ------------------------------------------------------------------ loadConfig

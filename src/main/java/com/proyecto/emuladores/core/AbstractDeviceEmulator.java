@@ -63,6 +63,10 @@ public abstract class AbstractDeviceEmulator implements IEmulator {
         // 3. Suscribirse al topic de comandos.
         mqttClient.subscribe(topicCmd, 1);
 
+        // publicar el estado inicial RETAINED para que la API reciba
+        // el estado real inmediatamente al conectar
+        publishState();
+
         log.info("[{}] Emulador iniciado — cmd: {} | state: {}", id, topicCmd, topicState);
     }
 

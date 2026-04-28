@@ -1,9 +1,30 @@
+# URL del broker MQTT (EMQX/Mosquitto) al que se conectan todos los emuladores.
+# Formato esperado: tcp://host:puerto
 brokerUrl: "tcp://localhost:1883"
+
+# Lista de aulas a simular. Por cada aula se crea un conjunto completo
+# de dispositivos (sensor y actuadores) con topics MQTT separados.
 aulas:
   - "aula-1"
   - "aula-2"
+
+# Intervalo de publicación periódica del sensor de lux en estado estable.
+# Unidad: milisegundos.
 luxIntervalMs: 2000
+
+# Retardo artificial para simular tiempo físico de respuesta de actuadores.
+# Unidad: milisegundos.
 processingDelayMs: 500
+
+# Frecuencia de ticks durante una transición gradual de lux.
+# Menor valor => transición más fluida y más mensajes MQTT.
+# Unidad: milisegundos.
 luxTransitionStepMs: 300
+
+# Magnitud del cambio de lux por tick durante la transición.
+# Mayor valor => transición más rápida y menos suave.
 luxTransitionDelta: 3
+
+# Tamaño máximo del buffer de historial por aula.
+# Al alcanzar el límite, se descartan primero los snapshots más antiguos.
 luxHistoryMaxSize: 200
