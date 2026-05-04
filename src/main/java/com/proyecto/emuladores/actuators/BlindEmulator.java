@@ -51,6 +51,14 @@ public class BlindEmulator extends ActuatorEmulator {
         position = 0;
         confirmAction("OPEN", "OPEN");
         log.info("[{}] Persianas abiertas", getId());
+
+        if (luxListener != null) {
+            luxListener.onLuxChanged(
+                new LuxSnapshot(getAulaId(), LUX_CONTRIBUTION, LuxChangeCause.BLIND_OPENED)
+            );
+        } else {
+            log.warn("[{}] luxListener no asignado — el sensor no recibirá el cambio", getId());
+        }
     }
 
     // ------------------------------------------------------------------ close

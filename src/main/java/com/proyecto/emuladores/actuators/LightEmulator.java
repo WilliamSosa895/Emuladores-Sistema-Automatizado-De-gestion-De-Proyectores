@@ -58,10 +58,11 @@ public class LightEmulator extends ActuatorEmulator {
         // Notificar al sensor que el lux subirá por LUX_CONTRIBUTION
         // (cuando las luces se encienden en medio de una sesión, el lux sube)
         if (luxListener != null) {
-            // No iniciamos transición de subida automáticamente —
-            // eso lo decide Spring Boot según el flujo de negocio.
-            // Solo notificamos que el estado cambió.
-            log.debug("[{}] Luces ON — Spring Boot decidirá si ajustar lux", getId());
+            luxListener.onLuxChanged(
+                new com.proyecto.emuladores.simulation.LuxSnapshot(
+                    getAulaId(), LUX_CONTRIBUTION, LuxChangeCause.LIGHTS_ON
+                )
+            );
         }
     }
 
