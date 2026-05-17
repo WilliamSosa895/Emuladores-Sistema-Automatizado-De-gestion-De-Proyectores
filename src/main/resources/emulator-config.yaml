@@ -7,6 +7,10 @@ brokerUrl: "tcp://localhost:1883"
 aulas:
   - "aula-1"
   - "aula-2"
+  - "aula-3"
+  - "aula-4"
+  - "aula-5"
+  - "aula-6"
 
 # Intervalo de publicación periódica del sensor de lux en estado estable.
 # Unidad: milisegundos.
@@ -28,3 +32,7 @@ luxTransitionDelta: 3
 # Tamaño máximo del buffer de historial por aula.
 # Al alcanzar el límite, se descartan primero los snapshots más antiguos.
 luxHistoryMaxSize: 200
+
+# Valor inicial de lux al arrancar cada aula.
+# Sube este valor si quieres que la demo empiece con iluminación alta.
+initialLux: 180
