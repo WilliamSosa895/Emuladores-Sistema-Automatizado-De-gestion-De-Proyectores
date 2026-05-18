@@ -90,11 +90,16 @@ public class AulaEmulatorManager {
         LuxTransitionListener luxListenerForLight = new LuxTransitionListener() {
             @Override
             public void onLuxChanged(LuxSnapshot snapshot) {
-                // snapshot.luxValue aquí es la CONTRIBUCIÓN de las luces (120 lux),
-                // no el valor absoluto. Calculamos el targetLux restando esa contribución.
                 int currentLux = luxSensor.getCurrentLux();
-                int targetLux  = Math.max(0, currentLux - snapshot.luxValue);
-                luxSensor.applyExternalChange(targetLux, LuxChangeCause.LIGHTS_OFF);
+                int targetLux;
+
+                if (snapshot.cause == LuxChangeCause.LIGHTS_ON) {
+                    targetLux = currentLux + snapshot.luxValue;
+                } else {
+                    targetLux = Math.max(0, currentLux - snapshot.luxValue);
+                }
+
+                luxSensor.applyExternalChange(targetLux, snapshot.cause);
             }
 
             @Override
@@ -106,10 +111,16 @@ public class AulaEmulatorManager {
         LuxTransitionListener luxListenerForBlind = new LuxTransitionListener() {
             @Override
             public void onLuxChanged(LuxSnapshot snapshot) {
-                // snapshot.luxValue aquí es la CONTRIBUCIÓN de la luz solar (80 lux)
                 int currentLux = luxSensor.getCurrentLux();
-                int targetLux  = Math.max(0, currentLux - snapshot.luxValue);
-                luxSensor.applyExternalChange(targetLux, LuxChangeCause.BLIND_CLOSED);
+                int targetLux;
+
+                if (snapshot.cause == LuxChangeCause.BLIND_OPENED) {
+                    targetLux = currentLux + snapshot.luxValue;
+                } else {
+                    targetLux = Math.max(0, currentLux - snapshot.luxValue);
+                }
+
+                luxSensor.applyExternalChange(targetLux, snapshot.cause);
             }
 
             @Override

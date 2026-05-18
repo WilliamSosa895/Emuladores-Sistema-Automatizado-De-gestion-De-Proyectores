@@ -38,6 +38,9 @@ public class LuxSensorEmulator extends SensorEmulator implements LuxTransitionLi
     // pueda consultarlo y enviarlo por WebSocket al frontend
     private final LuxHistoryBuffer historyBuffer;
 
+    // Evita que la primera lectura periódica meta ruido justo al arrancar.
+    private volatile boolean skipFirstStableMeasurement = true;
+
     // ------------------------------------------------------------------ constructor
 
     public LuxSensorEmulator(String aulaId, String brokerUrl,
@@ -63,6 +66,7 @@ public class LuxSensorEmulator extends SensorEmulator implements LuxTransitionLi
     public void start() {
         // Sincronizar el simulador con el lux inicial antes de arrancar el loop
         simulator.setCurrentLux(currentLux);
+        skipFirstStableMeasurement = true;
 
         // Publicar snapshot INITIAL en el buffer para que la gráfica
         // tenga el punto de partida antes de cualquier acción
@@ -89,6 +93,13 @@ public class LuxSensorEmulator extends SensorEmulator implements LuxTransitionLi
 
     @Override
     protected void measure() {
+        if (skipFirstStableMeasurement) {
+            // Mantener el valor inicial exactamente como viene del YAML en la primera publicación
+            // para que la demo arranque alta y estable.
+            skipFirstStableMeasurement = false;
+            return;
+        }
+
         if (simulator.isRunning()) {
             // Durante una transición, el simulador actualiza currentLux
             // a través de onLuxChanged() — measure() no interfiere
