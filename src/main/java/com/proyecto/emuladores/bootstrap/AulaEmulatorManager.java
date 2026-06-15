@@ -49,6 +49,12 @@ public class AulaEmulatorManager {
     // y se registran los listeners. El orden de creación importa.
 
     public AulaEmulatorManager(String aulaId, EmulatorConfig config) {
+        if (aulaId == null || aulaId.isBlank()) {
+            throw new IllegalArgumentException("aulaId es obligatorio");
+        }
+        if (config == null) {
+            throw new IllegalArgumentException("config es obligatorio");
+        }
         this.aulaId = aulaId;
         log.info("[Manager-{}] Ensamblando emuladores...", aulaId);
 

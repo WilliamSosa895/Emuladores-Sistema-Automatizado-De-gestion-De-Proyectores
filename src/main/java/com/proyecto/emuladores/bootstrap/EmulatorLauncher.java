@@ -30,6 +30,7 @@ public class EmulatorLauncher {
         // 1. Leer la configuración del YAML
         EmulatorConfig config = loadConfig();
         config.setBrokerUrl(resolveBrokerUrl(config.getBrokerUrl()));
+        config.validate();
         log.info("Configuración cargada: {}", config);
 
         // 2. Construir un AulaEmulatorManager por cada aula
@@ -99,6 +100,9 @@ public class EmulatorLauncher {
             }
 
             EmulatorConfig config = yaml.load(input);
+            if (config == null) {
+                throw new IllegalArgumentException("emulator-config.yaml está vacío o no tiene formato válido");
+            }
             log.info("emulator-config.yaml cargado correctamente");
             return config;
 

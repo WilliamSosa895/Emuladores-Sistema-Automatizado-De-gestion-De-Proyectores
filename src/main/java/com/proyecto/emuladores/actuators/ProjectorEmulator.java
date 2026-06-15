@@ -32,14 +32,21 @@ public class ProjectorEmulator extends ActuatorEmulator {
 
     @Override
     protected void applyAction(String action) {
+        if (action == null || action.isBlank()) {
+            log.warn("[{}] Acción vacía recibida", getId());
+            return;
+        }
+
+        String normalizedAction = action.trim().toUpperCase();
+
         // Comandos simples
-        switch (action.toUpperCase()) {
+        switch (normalizedAction) {
             case "TURN_ON"  -> turnOn();
             case "TURN_OFF" -> turnOff();
             default -> {
                 // Comando de cambio de entrada: "SET_INPUT:HDMI"
-                if (action.toUpperCase().startsWith("SET_INPUT:")) {
-                    String input = action.substring(10).trim();
+                if (normalizedAction.startsWith("SET_INPUT:")) {
+                    String input = action.trim().substring(10).trim();
                     setInput(input);
                 } else {
                     log.warn("[{}] Acción desconocida: {}", getId(), action);
@@ -70,8 +77,19 @@ public class ProjectorEmulator extends ActuatorEmulator {
     // ------------------------------------------------------------------ setInput
 
     public void setInput(String input) {
+        if (input == null || input.isBlank()) {
+            log.warn("[{}] Entrada vacía ignorada", getId());
+            return;
+        }
+
+        String normalized = input.trim().toUpperCase();
+        if (!normalized.equals("HDMI") && !normalized.equals("VGA") && !normalized.equals("WIRELESS")) {
+            log.warn("[{}] Entrada inválida: {}", getId(), input);
+            return;
+        }
+
         String previous = this.currentInput;
-        this.currentInput = input.toUpperCase();
+        this.currentInput = normalized;
         confirmActionWithInput("SET_INPUT:" + currentInput, isOn ? "ON" : "OFF");
         log.info("[{}] Input cambiado: {} → {}", getId(), previous, currentInput);
     }

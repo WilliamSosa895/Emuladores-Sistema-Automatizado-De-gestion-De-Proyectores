@@ -65,6 +65,45 @@ public class EmulatorConfig {
     public int getInitialLux()               { return initialLux; }
     public void setInitialLux(int v)         { this.initialLux = v; }
 
+    public void validate() {
+        if (brokerUrl == null || brokerUrl.isBlank()) {
+            throw new IllegalArgumentException("brokerUrl es obligatorio");
+        }
+        if (aulas == null || aulas.isEmpty()) {
+            throw new IllegalArgumentException("Debe existir al menos un aula en la configuración");
+        }
+        if (luxIntervalMs <= 0) {
+            throw new IllegalArgumentException("luxIntervalMs debe ser mayor que cero");
+        }
+        if (processingDelayMs < 0) {
+            throw new IllegalArgumentException("processingDelayMs no puede ser negativo");
+        }
+        if (luxTransitionStepMs <= 0) {
+            throw new IllegalArgumentException("luxTransitionStepMs debe ser mayor que cero");
+        }
+        if (luxTransitionDelta <= 0) {
+            throw new IllegalArgumentException("luxTransitionDelta debe ser mayor que cero");
+        }
+        if (luxHistoryMaxSize <= 0) {
+            throw new IllegalArgumentException("luxHistoryMaxSize debe ser mayor que cero");
+        }
+        if (initialLux < 0) {
+            throw new IllegalArgumentException("initialLux no puede ser negativo");
+        }
+
+        aulas.stream()
+                .filter(aula -> aula == null || aula.isBlank())
+                .findFirst()
+                .ifPresent(aula -> {
+                    throw new IllegalArgumentException("La lista de aulas contiene valores vacíos");
+                });
+
+        long aulasUnicas = aulas.stream().map(String::trim).distinct().count();
+        if (aulasUnicas != aulas.size()) {
+            throw new IllegalArgumentException("La lista de aulas contiene duplicados");
+        }
+    }
+
     @Override
     public String toString() {
         return "EmulatorConfig{"

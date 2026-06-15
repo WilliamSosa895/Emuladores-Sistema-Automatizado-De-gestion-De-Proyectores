@@ -109,11 +109,16 @@ public abstract class AbstractDeviceEmulator implements IEmulator {
     public void handleMqttMessage(String topic, String payload) {
         log.debug("[{}] Mensaje recibido en {}: {}", id, topic, payload);
         try {
+            if (payload == null || payload.isBlank()) {
+                log.warn("[{}] Payload vacío en {}", id, topic);
+                return;
+            }
+
             // El payload esperado es siempre: {"action": "TURN_OFF"} o similar
             Map<?, ?> map = JSON.readValue(payload, Map.class);
             Object action = map.get("action");
-            if (action != null) {
-                onCommand(action.toString());
+            if (action != null && !action.toString().isBlank()) {
+                onCommand(action.toString().trim());
             } else {
                 log.warn("[{}] Payload sin campo 'action': {}", id, payload);
             }
